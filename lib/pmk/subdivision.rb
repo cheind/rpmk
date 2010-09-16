@@ -52,8 +52,19 @@ module PMK
       next_level = level + 1
       clusters.each do |id, sub_features|
         sub_box = box.split(id)
-        n = parent[:leaves][id] = self.create_node(id, sub_box, sub_features, next_level)
+        n = parent[:leaves][id] = self.create_node(id, sub_box, sub_features, level)
         self.split(n, sub_box, sub_features, next_level, max_level)
+      end
+    end
+    
+    def Subdivision.pre_order(root, &block)
+      stack = [root]
+      while !stack.empty?
+        n = stack.pop
+        block.call(n)
+        n[:leaves].each do |id, leaf|
+          stack.push(leaf)
+        end
       end
     end
     
