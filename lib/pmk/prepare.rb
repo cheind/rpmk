@@ -1,30 +1,29 @@
 #
-# Pyramide Matching
+# RPMK - Ruby Pyramide Match Kernel Library
 # Copyright (c) Christoph Heindl, 2010
+# http://github.com/cheind/rpmk
 #
 
-require 'box'
-require 'read'
-require 'subdivision'
-require 'level_view'
+module PMK
+  #
+  # Generates a level-view of an hierarchical subdivision of features read from file.
+  #
+  def PMK.prepare_file(path_to_csv, world_box, nlevels)
+    output_lv = File.join(
+      File.dirname(path_to_csv), 
+      File.basename(path_to_csv))
+    output_lv += '.lv'
 
-#
-# Generates a level-view of an hierarchical subdivision of features read from file.
-#
-def prepare_file(path_to_csv, world_box, nlevels)
-  output_lv = File.join(
-    File.dirname(path_to_csv), 
-    File.basename(path_to_csv))
-  output_lv += '.lv'
-
-  d = world_box.lower.length
-  printf "generating #{File.basename(output_lv)} "
-  features = read_csv(path_to_csv); printf '.'
-  subdiv = Subdivision.generate(features, world_box, nlevels); printf '.'
-  lv = LevelView.new(subdiv, d, nlevels); puts '.'
-  File.open(output_lv, 'w') {|f| Marshal.dump(lv, f)}
-  lv
+    d = world_box.lower.length
+    printf "generating #{File.basename(output_lv)} "
+    features = read_csv(path_to_csv); printf '.'
+    subdiv = Subdivision.generate(features, world_box, nlevels); printf '.'
+    lv = LevelView.new(subdiv, d, nlevels); puts '.'
+    File.open(output_lv, 'w') {|f| Marshal.dump(lv, f)}
+    lv
+  end
 end
+
 
 # In case prepare is called directly by user.
 # Converts a list of objects, each given as a list of features, 

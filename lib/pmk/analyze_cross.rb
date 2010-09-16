@@ -1,35 +1,37 @@
 #
-# Pyramide Matching
+# RPMK - Ruby Pyramide Match Kernel Library
 # Copyright (c) Christoph Heindl, 2010
+# http://github.com/cheind/rpmk
 #
 
-require 'read'
+module PMK
 
-#
-# Read matrix from CSV file, first line is considered header
-#
-def read_matrix(path, sep = ' ')
-  matrix = []
-  File.foreach(path) do |line|
-    cells = line.split(sep)
-    matrix << cells.map do |c| 
-      c.chop!
-      begin
-        Float(c)
-      rescue ArgumentError
-        c
+  #
+  # Read matrix from CSV file, first line is considered header
+  #
+  def PMK.read_matrix(path, sep = ' ')
+    matrix = []
+    File.foreach(path) do |line|
+      cells = line.split(sep)
+      matrix << cells.map do |c| 
+        c.chop!
+        begin
+          Float(c)
+        rescue ArgumentError
+          c
+        end
       end
     end
+    matrix[0..-2]
   end
-  matrix[0..-2]
-end
 
-def find_link_id(row_name, col_names)
-  r = /^.*(\d+)/
-  raise ArgumentError unless row_name =~ r
-  row = $1
-  col_id = col_names.index(col_names.detect{|x| x =~ r && $1 == row})
-  col_id
+  def PMK.find_link_id(row_name, col_names)
+    r = /^.*(\d+)/
+    raise ArgumentError unless row_name =~ r
+    row = $1
+    col_id = col_names.index(col_names.detect{|x| x =~ r && $1 == row})
+    col_id
+  end
 end
 
 if __FILE__ == $0 

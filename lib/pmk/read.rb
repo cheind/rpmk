@@ -1,6 +1,7 @@
 #
-# Pyramide Matching
+# RPMK - Ruby Pyramide Match Kernel Library
 # Copyright (c) Christoph Heindl, 2010
+# http://github.com/cheind/rpmk
 #
 
 #

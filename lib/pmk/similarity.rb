@@ -1,46 +1,48 @@
 #
-# Pyramide Matching
+# RPMK - Ruby Pyramide Match Kernel Library
 # Copyright (c) Christoph Heindl, 2010
+# http://github.com/cheind/rpmk
 #
 
-require 'level_view'
+module PMK
 
-#
-# Calculates the symmetric similarity, K, between two level views
-#
-def similarity(lv_a, lv_b, use_nlevels = nil)
-  stop = lv_a.levels.length - 1
-  start = use_nlevels ? [0, lv_a.levels.length - use_nlevels].max : 0
+  #
+  # Calculates the symmetric similarity, K, between two level views
+  #
+  def PMK.similarity(lv_a, lv_b, use_nlevels = nil)
+    stop = lv_a.levels.length - 1
+    start = use_nlevels ? [0, lv_a.levels.length - use_nlevels].max : 0
 
-  last = 0
-  w = 1.0
-  k = 0.0
-  for lev in start..stop do
-    h_a = lv_a.levels[lev]
-    h_b = lv_b.levels[lev]
-    i = 0
-    h_a.each do |id, c_a|
-      c_b = h_b[id]
-      i += c_a < c_b ? c_a : c_b
+    last = 0
+    w = 1.0
+    k = 0.0
+    for lev in start..stop do
+      h_a = lv_a.levels[lev]
+      h_b = lv_b.levels[lev]
+      i = 0
+      h_a.each do |id, c_a|
+        c_b = h_b[id]
+        i += c_a < c_b ? c_a : c_b
+      end
+
+      n = i - last
+      k += w * n
+      last = i
+      w *= 0.5
     end
-
-    n = i - last
-    k += w * n
-    last = i
-    w *= 0.5
+    k
   end
-  k
-end
 
-#
-# Calculate the normed similarity between two level views.
-#
-def similarity_normed(lv_a, lv_b, max_level = nil)
-  k_ab = similarity(lv_a, lv_b, max_level)
-  k_aa = lv_a.levels.last[0]
-  k_bb = lv_b.levels.last[0]
-    
-  k_ab/Math::sqrt(k_aa*k_bb)
+  #
+  # Calculate the normed similarity between two level views.
+  #
+  def PMK.similarity_normed(lv_a, lv_b, max_level = nil)
+    k_ab = similarity(lv_a, lv_b, max_level)
+    k_aa = lv_a.levels.last[0]
+    k_bb = lv_b.levels.last[0]
+      
+    k_ab/Math::sqrt(k_aa*k_bb)
+  end
 end
 
 # In case similarity is called directly by user.
