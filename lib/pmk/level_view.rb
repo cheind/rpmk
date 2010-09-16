@@ -28,7 +28,7 @@ module PMK
     #
     def build(node, level, id, parent_id)
       pos = @nleaves * parent_id + id
-      @levels[level][pos] = node.nfeatures     
+      @levels[level][pos] = node[:nfeatures]
       node.leaves.each do |leaf_id, leaf|
         self.build(leaf, level + 1, leaf_id, pos)
       end
