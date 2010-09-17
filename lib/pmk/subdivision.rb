@@ -9,7 +9,7 @@ module PMK
   #
   # Represents a node in hierarchical subdivision of space.
   #
-  class Subdivision
+  class SubdivisionNode
     attr_reader :data
     
     def initialize(data = nil)
@@ -32,32 +32,8 @@ module PMK
       @data[key]
     end
     
-    #
-    # Generate a hierarchical subdivision of space.
-    #
-    def Subdivision.generate(features, world_box, nlevels)
-      root = self.create_node(0, world_box, features, 0)
-      self.split(root, world_box, features, 1, nlevels - 1)
-      root
-    end
-    
-    # 
-    # Recursive splitting of space into 2^d hyper-rectangles generated sparsley.
-    #
-    def Subdivision.split(parent, box, features, level, max_level)
-      return if level > max_level
-      # Classify each feature to a single sub-node
-      clusters = box.classify(features)
-      # Generate sub-nodes
-      next_level = level + 1
-      clusters.each do |id, sub_features|
-        sub_box = box.split(id)
-        n = parent[:leaves][id] = self.create_node(id, sub_box, sub_features, level)
-        self.split(n, sub_box, sub_features, next_level, max_level)
-      end
-    end
-    
-    def Subdivision.pre_order(root, &block)
+        
+    def SubdivisionNode.pre_order(root, &block)
       stack = [root]
       while !stack.empty?
         n = stack.pop
@@ -68,15 +44,43 @@ module PMK
       end
     end
     
-    protected
-    
-    #
-    # Create a new node from values.
-    #
-    def Subdivision.create_node(id, box, features, level)
-      raise NotImplementedError
+   end
+   
+   class Subdivision
+  
+    def initialize(controller)
+      @controller = controller
     end
     
+    #
+    # Generate a hierarchical subdivision of space.
+    #
+    def generate(features, world_box)
+      root = nil
+      unless @controller.stop?(nil, world_box, features, 0)
+        root = @controller.create(nil, world_box, features, 0, 0)
+        self.split(root, world_box, features, 1)
+      end
+      root
+    end
+    
+    protected
+    
+    # 
+    # Recursive splitting of space into 2^d hyper-rectangles generated sparsley.
+    #
+    def split(parent, box, features, level)
+      return if @controller.stop?(parent, box, features, level)
+      # Classify each feature to a single sub-node
+      clusters = box.classify(features)
+      # Generate sub-nodes
+      next_level = level + 1
+      clusters.each do |id, sub_features|
+        sub_box = box.split(id)
+        n = parent[:leaves][id] = @controller.create(parent, sub_box, sub_features, level, id)
+        self.split(n, sub_box, sub_features, next_level)
+      end
+    end   
   end
   
 end

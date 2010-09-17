@@ -16,8 +16,8 @@ $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'pmk/box'
 require 'pmk/subdivision'
-require 'pmk/pmk_subdivision'
-require 'pmk/level_view'
+require 'pmk/subdivision_controller'
+require 'pmk/pyramide_view'
 require 'pmk/prepare'
 require 'pmk/similarity'
 require 'pmk/read'
