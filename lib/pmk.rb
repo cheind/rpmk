@@ -18,7 +18,9 @@ require 'pmk/box'
 require 'pmk/subdivision'
 require 'pmk/subdivision_controller'
 require 'pmk/pyramide_view'
-require 'pmk/cli_prepare'
 require 'pmk/similarity'
 require 'pmk/io'
+require 'pmk/cli_prepare'
+require 'pmk/cli_similarity'
+
 
