@@ -7,8 +7,9 @@
 module PMK
 
   class SubdivisionController
-    def initialize(nlevels)
-      @max_level = nlevels - 1
+    
+    def initialize(params)
+      @max_level = params[:nlevels] - 1
     end
     
     def stop?(parent, box, features, level)

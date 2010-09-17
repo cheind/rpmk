@@ -12,9 +12,9 @@ module PMK
   class PyramideView
     attr_reader :nleaves
     
-    def initialize(dims, nlevels)
-      @nleaves = 2**dims
-      @nlevels = nlevels
+    def initialize(params)
+      @nleaves = 2**params[:ndims]
+      @nlevels = params[:nlevels]
     end
        
     def generate(subdivision_node)

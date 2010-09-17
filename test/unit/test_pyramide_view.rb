@@ -10,7 +10,7 @@ class TestPyramideView < Test::Unit::TestCase
   include FeatureAssertions
   
   def test_init
-    pyr = PMK::PyramideView.new(3, 10)
+    pyr = PMK::PyramideView.new(:ndims => 3, :nlevels => 10)
     assert_equal(8, pyr.nleaves)
   end
   
@@ -23,10 +23,10 @@ class TestPyramideView < Test::Unit::TestCase
     features = [[0.0, 0.0], [1.0, 1.0], [0.3, 0.8], [0.4, 0.9], [0.6, 0.4]]
     
     root = PMK::Subdivision.new(
-      PMK::SubdivisionController.new(3)
+      PMK::SubdivisionController.new(:nlevels => 3)
     ).generate(features, box)
     
-    pyr = PMK::PyramideView.new(2, 3)
+    pyr = PMK::PyramideView.new(:ndims => 2, :nlevels => 3)
     view = pyr.generate(root)
     assert_equal(3, view.length)
     
